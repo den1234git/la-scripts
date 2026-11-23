@@ -9,6 +9,7 @@ commit / push する。git の操作は全部このスクリプト（プログ�
   - 感想文リレーの結果      kansou_relay/<NNN>/ の *.md と measurement.jsonl
   - 制作チームのメモと成果物 seisaku/seisaku_memo.md と seisaku/games/*.py
   - 状態報告                kyozai_inbox.txt（教材の到着記録）
+  - 改善案（提案書）        docs/改善案_*.md → reports/proposals/
   - read_sheet（日記・教訓） READ_SHEET_PATH を設定した時だけ
   - 広場の記録              PLAZA_DIR を設定した時だけ
 
@@ -125,6 +126,13 @@ def gather() -> list:
     # 状態報告（教材の到着記録）
     if os.path.isfile(KYOZAI_INBOX):
         items.append((KYOZAI_INBOX, "reports/status/kyozai_inbox.txt"))
+    # 改善案（クロードからムスビへの提案書。改善案_ で始まる .md だけ）
+    docs_dir = os.path.join(_DIR, "docs")
+    if os.path.isdir(docs_dir):
+        for name in sorted(os.listdir(docs_dir)):
+            if name.startswith("改善案_") and name.endswith(".md"):
+                items.append((os.path.join(docs_dir, name),
+                              f"reports/proposals/{name}"))
     # read_sheet（設定時のみ。ファイルでもフォルダでも可）
     if READ_SHEET_PATH and os.path.isfile(READ_SHEET_PATH):
         items.append((READ_SHEET_PATH,
