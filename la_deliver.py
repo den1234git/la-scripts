@@ -10,6 +10,8 @@ commit / push する。git の操作は全部このスクリプト（プログ�
   - 制作チームのメモと成果物 seisaku/seisaku_memo.md と seisaku/games/*.py
   - 状態報告                kyozai_inbox.txt（教材の到着記録）
   - 改善案（提案書）        docs/改善案_*.md → reports/proposals/
+  - 会議の記録              meeting_logs/ の *.md と *.json → reports/meeting/
+  - 消防チームの記録        shobo_team/ の *.md → reports/shobo_team/
   - read_sheet（日記・教訓） READ_SHEET_PATH を設定した時だけ
   - 広場の記録              PLAZA_DIR を設定した時だけ
 
@@ -45,6 +47,8 @@ GIT_TIMEOUT = 120
 KANSOU_DIR = os.path.join(_DIR, "kansou_relay")       # 感想文リレーの出力先
 SEISAKU_DIR = os.path.join(_DIR, "seisaku")           # 制作チームのフォルダ
 KYOZAI_INBOX = os.path.join(_DIR, "kyozai_inbox.txt")  # 教材の到着記録
+MEETING_DIR = os.path.join(_DIR, "meeting_logs")      # 会議の記録
+SHOBO_TEAM_DIR = os.path.join(_DIR, "shobo_team")     # 消防チームのフォルダ
 READ_SHEET_PATH = ""   # 例: read_sheet のファイル or フォルダのパス
 PLAZA_DIR = ""         # 例: 広場の記録フォルダのパス
 
@@ -133,6 +137,18 @@ def gather() -> list:
             if name.startswith("改善案_") and name.endswith(".md"):
                 items.append((os.path.join(docs_dir, name),
                               f"reports/proposals/{name}"))
+    # 会議の記録
+    if os.path.isdir(MEETING_DIR):
+        for name in sorted(os.listdir(MEETING_DIR)):
+            if name.endswith(".md") or name.endswith(".json"):
+                items.append((os.path.join(MEETING_DIR, name),
+                              f"reports/meeting/{name}"))
+    # 消防チームの記録
+    if os.path.isdir(SHOBO_TEAM_DIR):
+        for name in sorted(os.listdir(SHOBO_TEAM_DIR)):
+            if name.endswith(".md"):
+                items.append((os.path.join(SHOBO_TEAM_DIR, name),
+                              f"reports/shobo_team/{name}"))
     # read_sheet（設定時のみ。ファイルでもフォルダでも可）
     if READ_SHEET_PATH and os.path.isfile(READ_SHEET_PATH):
         items.append((READ_SHEET_PATH,
