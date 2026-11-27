@@ -12,6 +12,7 @@ commit / push する。git の操作は全部このスクリプト（プログ�
   - 改善案（提案書）        docs/改善案_*.md → reports/proposals/
   - 会議の記録              meeting_logs/ の *.md と *.json → reports/meeting/
   - 消防チームの記録        shobo/ と shobo_team/ の直下の *.md → reports/shobo_team/
+  - 板の番犬の巡回報告      watchdog_log.json と agent_suspects.json → reports/board_watch/
   - read_sheet（日記・教訓） READ_SHEET_PATH を設定した時だけ
   - 広場の記録              PLAZA_DIR を設定した時だけ
 
@@ -52,6 +53,8 @@ SHOBO_TEAM_DIRS = [os.path.join(_DIR, "shobo"),       # 消防チームのフォ
                    os.path.join(_DIR, "shobo_team")]  # （呼び名が2つあるので両方見る）
 READ_SHEET_PATH = ""   # 例: read_sheet のファイル or フォルダのパス
 PLAZA_DIR = ""         # 例: 広場の記録フォルダのパス
+WATCHDOG_LOG   = r"F:\ai_agent\inu\watchdog_log.json"
+AGENT_SUSPECTS = r"F:\掲示板専用\agent_suspects.json"
 
 
 def now_str() -> str:
@@ -166,6 +169,11 @@ def gather() -> list:
             p = os.path.join(PLAZA_DIR, name)
             if os.path.isfile(p):
                 items.append((p, f"reports/plaza/{name}"))
+    # 板の番犬（誾千代）の巡回報告
+    if os.path.isfile(WATCHDOG_LOG):
+        items.append((WATCHDOG_LOG,   "reports/board_watch/watchdog_log.json"))
+    if os.path.isfile(AGENT_SUSPECTS):
+        items.append((AGENT_SUSPECTS, "reports/board_watch/agent_suspects.json"))
     return items
 
 
